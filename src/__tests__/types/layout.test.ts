@@ -1,7 +1,12 @@
 import { describe, it, expectTypeOf } from 'vitest'
-import type { LinkColor, LinkGroup, PanelConfig, LayoutNode, PanelProps } from '../../types/layout'
+import type { PanelType, LinkColor, LinkGroup, PanelConfig, LayoutNode, PanelProps } from '../../types/layout'
 
 describe('layout types', () => {
+  it('PanelType accepts known panel types', () => {
+    expectTypeOf<'chart'>().toMatchTypeOf<PanelType>()
+    expectTypeOf<'watchlist'>().toMatchTypeOf<PanelType>()
+  })
+
   it('LinkColor accepts all four colors', () => {
     expectTypeOf<'amber'>().toMatchTypeOf<LinkColor>()
     expectTypeOf<'green'>().toMatchTypeOf<LinkColor>()

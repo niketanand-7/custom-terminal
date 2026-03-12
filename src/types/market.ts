@@ -10,8 +10,10 @@ export type Tick = {
   timestamp: number
 }
 
+import type { UTCTimestamp } from 'lightweight-charts'
+
 export type Candle = {
-  time: number
+  time: UTCTimestamp
   open: number
   high: number
   low: number
