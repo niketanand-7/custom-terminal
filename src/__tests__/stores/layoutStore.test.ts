@@ -4,7 +4,7 @@ import type { LayoutNode } from '../../types'
 
 describe('layoutStore', () => {
   beforeEach(() => {
-    useLayoutStore.setState({ layout: DEFAULT_LAYOUT, linkGroups: [] }, true)
+    useLayoutStore.setState({ layout: DEFAULT_LAYOUT, linkGroups: [] } as never, true)
     localStorage.clear()
   })
 

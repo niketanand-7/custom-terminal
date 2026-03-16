@@ -29,4 +29,6 @@ export type CoinMetadata = {
   description: string | null
 }
 
+export type ConnectionStatus = 'connected' | 'disconnected' | 'reconnecting'
+
 export type Unsubscribe = () => void
