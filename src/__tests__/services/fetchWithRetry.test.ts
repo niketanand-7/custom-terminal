@@ -54,9 +54,11 @@ describe('fetchWithRetry', () => {
     vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('network error'))
 
     const promise = fetchWithRetry('https://api.example.com/test')
+    // Attach rejection handler before advancing timers to avoid unhandled rejection warnings
+    const assertion = expect(promise).rejects.toThrow('network error')
     await vi.advanceTimersByTimeAsync(1000)
     await vi.advanceTimersByTimeAsync(3000)
-    await expect(promise).rejects.toThrow('network error')
+    await assertion
     // 1 initial + 2 retries = 3 total
     expect(globalThis.fetch).toHaveBeenCalledTimes(3)
   })
@@ -66,9 +68,10 @@ describe('fetchWithRetry', () => {
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(failResponse)
 
     const promise = fetchWithRetry('https://api.example.com/test')
+    const assertion = expect(promise).rejects.toThrow('HTTP 500')
     await vi.advanceTimersByTimeAsync(1000)
     await vi.advanceTimersByTimeAsync(3000)
-    await expect(promise).rejects.toThrow('HTTP 500')
+    await assertion
     expect(globalThis.fetch).toHaveBeenCalledTimes(3)
   })
 })
