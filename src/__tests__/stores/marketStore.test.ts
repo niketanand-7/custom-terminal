@@ -4,7 +4,7 @@ import type { Tick } from '../../types'
 
 describe('marketStore', () => {
   beforeEach(() => {
-    useMarketStore.setState({ tickers: {}, connectionStatus: 'disconnected' }, true)
+    useMarketStore.setState({ tickers: {}, connectionStatus: 'disconnected' } as never, true)
   })
 
   it('has initial state with empty tickers and disconnected', () => {
