@@ -3,10 +3,17 @@
 const QUOTE_CURRENCIES = ['USDT', 'BUSD', 'USDC', 'BTC', 'ETH', 'BNB'] as const
 
 /**
- * Convert internal "BTC/USDT" → Binance "btcusdt"
+ * Convert internal "BTC/USDT" → Binance WS format "btcusdt"
  */
 export function toBinanceSymbol(internal: string): string {
   return internal.replace('/', '').toLowerCase()
+}
+
+/**
+ * Convert internal "BTC/USDT" → Binance REST format "BTCUSDT"
+ */
+export function toBinanceRestSymbol(internal: string): string {
+  return internal.replace('/', '').toUpperCase()
 }
 
 /**

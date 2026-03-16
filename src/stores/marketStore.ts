@@ -1,7 +1,6 @@
 import { create } from 'zustand'
-import type { Tick } from '../types'
-
-type ConnectionStatus = 'connected' | 'disconnected' | 'reconnecting'
+import type { Tick, ConnectionStatus } from '../types'
+import { patchStoreSetState } from './patchStoreSetState'
 
 type MarketState = {
   tickers: Record<string, Tick>
@@ -15,31 +14,18 @@ const useMarketStoreBase = create<MarketState>()((set) => ({
   connectionStatus: 'disconnected',
 
   updateTick: (tick: Tick) =>
-    set((state) => ({
-      tickers: { ...state.tickers, [tick.symbol]: tick },
-    })),
+    set((state) => {
+      const existing = state.tickers[tick.symbol]
+      if (existing && existing.price === tick.price && existing.timestamp === tick.timestamp) {
+        return state
+      }
+      return { tickers: { ...state.tickers, [tick.symbol]: tick } }
+    }),
 
   setConnectionStatus: (status: ConnectionStatus) =>
     set({ connectionStatus: status }),
 }))
 
-// Preserve action functions when setState is called with replace=true (zustand v5 compatibility)
-const originalSetState = useMarketStoreBase.setState.bind(useMarketStoreBase)
-const actions = (() => {
-  const s = useMarketStoreBase.getState()
-  return {
-    updateTick: s.updateTick,
-    setConnectionStatus: s.setConnectionStatus,
-  }
-})()
-
-useMarketStoreBase.setState = (partial, replace) => {
-  if (replace) {
-    const next = typeof partial === 'function' ? partial(useMarketStoreBase.getState()) : partial
-    originalSetState({ ...actions, ...next } as MarketState, true)
-  } else {
-    originalSetState(partial as Partial<MarketState>, false)
-  }
-}
+patchStoreSetState(useMarketStoreBase, ['updateTick', 'setConnectionStatus'])
 
 export const useMarketStore = useMarketStoreBase

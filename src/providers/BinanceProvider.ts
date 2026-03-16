@@ -4,7 +4,7 @@ import type { Tick, Candle, Timeframe, Unsubscribe } from '../types'
 import type { UTCTimestamp } from 'lightweight-charts'
 import { WebSocketManager } from '../services/WebSocketManager'
 import { fetchWithRetry } from '../services/fetchWithRetry'
-import { toBinanceSymbol } from '../services/symbolUtils'
+import { toBinanceSymbol, toBinanceRestSymbol } from '../services/symbolUtils'
 
 const BINANCE_REST_URL = 'https://api.binance.com/api/v3'
 
@@ -58,14 +58,10 @@ export class BinanceProvider implements MarketDataProvider {
   }
 
   async getOHLCV(symbol: string, timeframe: Timeframe, limit = 500): Promise<Candle[]> {
-    const binanceSymbol = toBinanceSymbol(symbol).toUpperCase()
+    const binanceSymbol = toBinanceRestSymbol(symbol)
     const url = `${BINANCE_REST_URL}/klines?symbol=${binanceSymbol}&interval=${timeframe}&limit=${limit}`
 
     const response = await fetchWithRetry(url)
-    if (!response.ok) {
-      throw new Error(`Binance API error: ${response.status} ${response.statusText}`)
-    }
-
     const data = (await response.json()) as unknown[][]
     return data.map((k) => ({
       time: ((k[0] as number) / 1000) as UTCTimestamp,

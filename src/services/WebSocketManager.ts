@@ -1,7 +1,7 @@
 // src/services/WebSocketManager.ts
-import type { Unsubscribe } from '../types'
+import type { ConnectionStatus, Unsubscribe } from '../types'
 
-type StatusCallback = (status: 'connected' | 'disconnected' | 'reconnecting') => void
+type StatusCallback = (status: ConnectionStatus) => void
 type MessageCallback = (data: unknown) => void
 
 type WebSocketManagerOptions = {

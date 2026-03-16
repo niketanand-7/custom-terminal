@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import type { LayoutNode, LinkGroup, LinkColor, PanelType } from '../types'
+import { patchStoreSetState } from './patchStoreSetState'
 import {
   removePanelNode,
   addPanelToLayout,
@@ -86,28 +87,10 @@ const useLayoutStoreBase = create<LayoutState>()((set) => ({
     }),
 }))
 
-// Preserve action functions when setState is called with replace=true (zustand v5 compatibility)
-const originalSetState = useLayoutStoreBase.setState.bind(useLayoutStoreBase)
-const actions = (() => {
-  const s = useLayoutStoreBase.getState()
-  return {
-    removePanel: s.removePanel,
-    addPanel: s.addPanel,
-    resizePanel: s.resizePanel,
-    broadcastSymbol: s.broadcastSymbol,
-    saveLayout: s.saveLayout,
-    loadLayout: s.loadLayout,
-  }
-})()
-
-useLayoutStoreBase.setState = (partial, replace) => {
-  if (replace) {
-    const next = typeof partial === 'function' ? partial(useLayoutStoreBase.getState()) : partial
-    originalSetState({ ...actions, ...next } as LayoutState, true)
-  } else {
-    originalSetState(partial as Partial<LayoutState>, false)
-  }
-}
+patchStoreSetState(useLayoutStoreBase, [
+  'removePanel', 'addPanel', 'resizePanel',
+  'broadcastSymbol', 'saveLayout', 'loadLayout',
+])
 
 export const useLayoutStore = useLayoutStoreBase
 
