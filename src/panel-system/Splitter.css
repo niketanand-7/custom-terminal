@@ -1,0 +1,20 @@
+.splitter {
+  flex-shrink: 0;
+  background: var(--border);
+}
+
+.splitter:hover {
+  background: var(--border-light);
+}
+
+.splitter[data-direction="row"] {
+  width: 3px;
+  height: 100%;
+  cursor: col-resize;
+}
+
+.splitter[data-direction="column"] {
+  width: 100%;
+  height: 3px;
+  cursor: row-resize;
+}

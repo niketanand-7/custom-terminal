@@ -1,4 +1,5 @@
 import { useCallback, useRef } from 'react'
+import './Splitter.css'
 
 type SplitterProps = {
   direction: 'row' | 'column'
@@ -35,15 +36,10 @@ export function Splitter({ direction, onResize }: SplitterProps) {
 
   return (
     <div
+      className="splitter"
       role="separator"
       data-direction={direction}
       onMouseDown={handleMouseDown}
-      style={{
-        flexShrink: 0,
-        cursor: direction === 'row' ? 'col-resize' : 'row-resize',
-        width: direction === 'row' ? 4 : '100%',
-        height: direction === 'column' ? 4 : '100%',
-      }}
     />
   )
 }

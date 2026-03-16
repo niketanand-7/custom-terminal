@@ -35,7 +35,8 @@ function App() {
   )
 
   return (
-    <div id="terminal-root" style={{ width: '100vw', height: '100vh', overflow: 'hidden' }}>
+    <div id="terminal-root" className="terminal-root">
+      <div style={{ flex: 1, minHeight: 0 }}>
       <PanelGrid
         layout={layout}
         onClose={removePanel}
@@ -44,6 +45,7 @@ function App() {
         onSymbolSelect={broadcastSymbol}
         isOnlyPanel={layout.type === 'panel'}
       />
+      </div>
     </div>
   )
 }

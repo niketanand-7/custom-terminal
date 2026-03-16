@@ -1,5 +1,6 @@
 import { getPanel } from './registry'
 import type { PanelType, LinkColor } from '../types'
+import './PanelShell.css'
 
 type PanelShellProps = {
   panelId: string
@@ -26,29 +27,21 @@ export function PanelShell({
     : panelType.toUpperCase()
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '2px 8px',
-          flexShrink: 0,
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+    <div className="panel-shell">
+      <div className="panel-titlebar">
+        <div className="panel-titlebar__left">
           {linkColor && (
-            <span data-testid="link-indicator" style={{ width: 8, height: 8, borderRadius: '50%' }} />
+            <span className="panel-link-dot" data-testid="link-indicator" data-color={linkColor} />
           )}
-          <span>{title}</span>
+          <span className="panel-titlebar__title">{title}</span>
         </div>
         {!isLastPanel && (
-          <button aria-label="Close panel" onClick={() => onClose(panelId)}>
+          <button className="panel-close-btn" aria-label="Close panel" onClick={() => onClose(panelId)}>
             &times;
           </button>
         )}
       </div>
-      <div style={{ flex: 1, overflow: 'auto' }}>
+      <div className="panel-content">
         {PanelComponent ? (
           <PanelComponent panelId={panelId} linkedSymbol={linkedSymbol} onSymbolSelect={onSymbolSelect} />
         ) : (
